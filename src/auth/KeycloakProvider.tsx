@@ -14,10 +14,18 @@ interface KeycloakProviderProps {
     children: ReactNode;
 }
 
+let isInitialized = false;
+
 export function KeycloakProvider({ children }: KeycloakProviderProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
+        if (isInitialized) {
+            return;
+        }
+
+        isInitialized = true;
+
         keycloak.init({ onLoad: 'login-required' })
             .then(auth => setIsAuthenticated(auth));
     }, []);
